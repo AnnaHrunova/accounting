@@ -1,6 +1,6 @@
 package com.mintos.accounting.domain.account;
 
-import com.mintos.accounting.Currency;
+import com.mintos.accounting.common.Currency;
 import com.mintos.accounting.domain.BaseEntity;
 import com.mintos.accounting.domain.client.ClientEntity;
 import jakarta.persistence.*;

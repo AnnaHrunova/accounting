@@ -1,4 +1,4 @@
-package com.mintos.accounting;
+package com.mintos.accounting.common;
 
 public enum TransactionType {
 

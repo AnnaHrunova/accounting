@@ -9,7 +9,7 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @EntityListeners(AuditingEntityListener.class)
@@ -28,10 +28,10 @@ public abstract class BaseEntity {
 
     @CreatedDate
     @Column(nullable = false)
-    private LocalDateTime createdDate;
+    private OffsetDateTime createdDate;
 
     @LastModifiedDate
-    private LocalDateTime updatedDate;
+    private OffsetDateTime updatedDate;
 
     @CreatedBy
     @Column(nullable = false)

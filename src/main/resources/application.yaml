@@ -1,0 +1,3 @@
+accounting:
+  api:
+    v1: accounting/v1
