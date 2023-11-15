@@ -16,25 +16,23 @@ import java.math.BigDecimal;
 @Table(name = "transaction")
 public class TransactionEntity extends BaseEntity {
 
-    @Enumerated(EnumType.STRING)
-    private TransactionType type;
-
     private BigDecimal amount;
 
+    @Enumerated(EnumType.STRING)
     private Currency currency;
 
     @ManyToOne
     @JoinColumn(
-            name = "account_id_part",
-            foreignKey = @ForeignKey(name = "fk_tr_acc_part"),
+            name = "account_id_from",
+            foreignKey = @ForeignKey(name = "fk_tr_acc_from"),
             nullable = false)
-    private AccountEntity participantAccount;
+    private AccountEntity fromAccount;
 
     @ManyToOne
     @JoinColumn(
-            name = "account_id_main",
-            foreignKey = @ForeignKey(name = "fk_tr_acc_main"),
+            name = "account_id_to",
+            foreignKey = @ForeignKey(name = "fk_tr_acc_to"),
             nullable = false)
-    private AccountEntity mainAccount;
+    private AccountEntity toAccount;
 
 }

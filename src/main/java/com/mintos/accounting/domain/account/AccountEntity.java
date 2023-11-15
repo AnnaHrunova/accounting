@@ -4,14 +4,16 @@ import com.mintos.accounting.common.Currency;
 import com.mintos.accounting.domain.BaseEntity;
 import com.mintos.accounting.domain.client.ClientEntity;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 
+@EqualsAndHashCode(callSuper = true)
 @Getter
 @Setter
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "account")
 public class AccountEntity extends BaseEntity {
 
@@ -28,3 +30,5 @@ public class AccountEntity extends BaseEntity {
     private ClientEntity client;
 
 }
+
+
