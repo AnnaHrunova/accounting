@@ -9,11 +9,12 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "${accounting.api.v1}")
+@RequestMapping(path = "${accounting.api.v1}/clients")
 @AllArgsConstructor
 @CrossOrigin
 @Slf4j
@@ -21,18 +22,18 @@ public class AccountingController {
 
     private final AccountingService accountingService;
 
-    @PostMapping("/clients")
+    @PostMapping()
     public ResponseEntity<CreateClientResponse> createClient(
             @Valid @RequestBody CreateClientRequest request) {
         val response = accountingService.createClient(request);
-        return ResponseEntity.ok(response);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @PostMapping("/clients/{client_id}/accounts")
+    @PostMapping("/{client_id}/accounts")
     public ResponseEntity<CreateAccountResponse> createAccount(
             @PathVariable("client_id") String clientUUID,
             @Valid @RequestBody CreateAccountRequest request) {
         val response = accountingService.createAccount(clientUUID, request);
-        return ResponseEntity.ok(response);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 }

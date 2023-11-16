@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import java.util.List;
 import java.util.UUID;
 
-public interface TransactionViewRepository extends JpaRepository<TransactionViewEntity, UUID>, JpaSpecificationExecutor<TransactionEntity> {
+public interface TransactionViewRepository extends JpaRepository<TransactionViewEntity, UUID>, JpaSpecificationExecutor<TransactionViewEntity> {
 
 
     List<TransactionViewEntity> findAllByAccount_IdOrderByCreatedDateDesc(UUID accountUUID);

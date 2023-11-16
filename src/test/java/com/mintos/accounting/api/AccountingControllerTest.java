@@ -31,6 +31,6 @@ class AccountingControllerTest {
                 .contentType(MediaType.APPLICATION_JSON);
 
         mockMvc.perform(requestBuilder)
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
     }
 }
