@@ -1,7 +1,8 @@
 package com.mintos.accounting.api;
 
-import com.mintos.accounting.api.model.*;
-import com.mintos.accounting.service.AccountingService;
+import com.mintos.accounting.api.model.CreateTransactionRequest;
+import com.mintos.accounting.api.model.CreateTransactionResponse;
+import com.mintos.accounting.common.TransactionStatus;
 import com.mintos.accounting.service.TransactionsService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,7 @@ public class TransactionsController {
     public ResponseEntity<CreateTransactionResponse> createTransaction(
             @Valid @RequestBody CreateTransactionRequest request) {
         val response = transactionsService.createTransaction(request);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        val httpStatus = response.getStatus() == TransactionStatus.ERROR ? HttpStatus.PRECONDITION_FAILED : HttpStatus.CREATED;
+        return new ResponseEntity<>(response, httpStatus);
     }
 }

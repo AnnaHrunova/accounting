@@ -5,6 +5,8 @@ import com.mintos.accounting.api.model.CreateAccountResponse;
 import com.mintos.accounting.api.model.CreateClientRequest;
 import com.mintos.accounting.api.model.CreateClientResponse;
 import com.mintos.accounting.service.account.AccountService;
+import com.mintos.accounting.service.account.CreateAccountCommand;
+import com.mintos.accounting.service.account.CreateClientCommand;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.val;

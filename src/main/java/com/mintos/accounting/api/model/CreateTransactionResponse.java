@@ -1,15 +1,13 @@
 package com.mintos.accounting.api.model;
 
 
-import com.mintos.accounting.common.Currency;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import com.mintos.accounting.common.TransactionStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 
 @Data
 @Builder
@@ -18,4 +16,8 @@ import java.math.BigDecimal;
 public class CreateTransactionResponse {
 
     private String transactionUUID;
+
+    private OffsetDateTime dateTime;
+
+    private TransactionStatus status;
 }

@@ -22,19 +22,24 @@ public class TestFixtures {
         return request;
     }
 
-    public static CreateAccountRequest prepareAccountRequest() {
+    public static CreateAccountRequest prepareAccountRequest(BigDecimal... amount) {
         val request = new CreateAccountRequest();
         request.setCurrency(Currency.EUR);
+        if (amount.length == 1) {
+            request.setBalance(toMoney(amount[0]));
+        } else {
+            request.setBalance(toMoney(new BigDecimal("100")));
+        }
         return request;
     }
 
-    public static CreateTransactionRequest prepareTransactionRequest(String accountFrom, String accountTo, BigDecimal amount, Currency currency) {
+    public static CreateTransactionRequest prepareDefaultTransactionRequest(UUID accountFrom, UUID accountTo) {
         val request = new CreateTransactionRequest();
         request.setRequestId(UUID.randomUUID().toString());
-        request.setAmount(toMoney(amount));
-        request.setCurrency(currency);
-        request.setFromAccountUUID(accountFrom);
-        request.setToAccountUUID(accountTo);
+        request.setCurrency(Currency.EUR);
+        request.setAmount(toMoney(new BigDecimal("5")));
+        request.setFromAccountUUID(accountFrom.toString());
+        request.setToAccountUUID(accountTo.toString());
         return request;
     }
 

@@ -1,6 +1,5 @@
 package com.mintos.accounting.domain.view;
 
-import com.mintos.accounting.domain.transaction.TransactionEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 

@@ -6,8 +6,6 @@ import com.mintos.accounting.domain.client.ClientEntity;
 import com.mintos.accounting.domain.client.ClientRepository;
 import com.mintos.accounting.exceptions.Reason;
 import com.mintos.accounting.exceptions.ResourceNotFoundException;
-import com.mintos.accounting.service.CreateAccountCommand;
-import com.mintos.accounting.service.CreateClientCommand;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.val;
@@ -15,7 +13,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.UUID;
 
 import static com.mintos.accounting.common.FormattingUtils.toMoney;
@@ -47,7 +44,7 @@ public class AccountService {
     }
 
     public AccountData getAccount(String accountUUID) {
-       return accountRepository.findById(UUID.fromString(accountUUID))
+        return accountRepository.findById(UUID.fromString(accountUUID))
                 .map(accountMapper::map)
                 .orElseThrow(() -> new ResourceNotFoundException(Reason.ACCOUNT_NOT_FOUND, accountUUID));
     }

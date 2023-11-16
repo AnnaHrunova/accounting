@@ -1,7 +1,7 @@
 package com.mintos.accounting.domain.transaction;
 
 import com.mintos.accounting.common.Currency;
-import com.mintos.accounting.common.TransactionType;
+import com.mintos.accounting.common.TransactionStatus;
 import com.mintos.accounting.domain.BaseEntity;
 import com.mintos.accounting.domain.account.AccountEntity;
 import jakarta.persistence.*;
@@ -16,10 +16,15 @@ import java.math.BigDecimal;
 @Table(name = "transaction")
 public class TransactionEntity extends BaseEntity {
 
+    private String requestId;
+
     private BigDecimal amount;
 
     @Enumerated(EnumType.STRING)
     private Currency currency;
+
+    @Enumerated(EnumType.STRING)
+    private TransactionStatus status;
 
     @ManyToOne
     @JoinColumn(

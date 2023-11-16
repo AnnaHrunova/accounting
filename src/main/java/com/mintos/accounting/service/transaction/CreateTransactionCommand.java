@@ -1,6 +1,7 @@
-package com.mintos.accounting.service;
+package com.mintos.accounting.service.transaction;
 
 import com.mintos.accounting.common.Currency;
+import com.mintos.accounting.common.TransactionStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -17,6 +18,9 @@ import java.math.BigDecimal;
 public class CreateTransactionCommand {
 
     @NotBlank
+    private String requestId;
+
+    @NotBlank
     private String fromAccountUUID;
 
     @NotBlank
@@ -27,6 +31,9 @@ public class CreateTransactionCommand {
 
     @NotNull
     private BigDecimal amount;
+
+    @NotNull
+    private TransactionStatus status;
 
     private BigDecimal convertedAmount;
 }

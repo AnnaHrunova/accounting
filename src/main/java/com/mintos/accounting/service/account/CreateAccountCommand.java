@@ -1,4 +1,4 @@
-package com.mintos.accounting.service;
+package com.mintos.accounting.service.account;
 
 import com.mintos.accounting.common.Currency;
 import jakarta.validation.constraints.NotBlank;

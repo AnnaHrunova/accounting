@@ -1,6 +1,7 @@
-package com.mintos.accounting.service.account;
+package com.mintos.accounting.service.transaction;
 
-import com.mintos.accounting.api.FilteredPageRequest;
+import com.mintos.accounting.api.model.FilteredPageRequest;
+import com.mintos.accounting.api.model.TransactionViewResponse;
 import com.mintos.accounting.common.TransactionType;
 import com.mintos.accounting.domain.account.AccountEntity;
 import com.mintos.accounting.domain.account.AccountRepository;
@@ -11,7 +12,6 @@ import com.mintos.accounting.domain.view.TransactionViewRepository;
 import com.mintos.accounting.domain.view.TransactionViewSpecification;
 import com.mintos.accounting.exceptions.Reason;
 import com.mintos.accounting.exceptions.ResourceNotFoundException;
-import com.mintos.accounting.service.CreateTransactionCommand;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.val;
@@ -31,9 +31,10 @@ public class TransactionService {
     private final AccountRepository accountRepository;
     private final TransactionRepository transactionRepository;
     private final TransactionViewRepository transactionViewRepository;
+    private final TransactionMapper mapper;
 
     @Transactional
-    public UUID createTransaction(@Valid CreateTransactionCommand command) {
+    public TransactionData performTransaction(@Valid CreateTransactionCommand command) {
         val accountFrom = getAccount(command.getFromAccountUUID());
         val accountTo = getAccount(command.getToAccountUUID());
 
@@ -43,14 +44,23 @@ public class TransactionService {
         val accountToNewBalance = accountTo.getBalance().add(command.getAmount());
         updateAccount(accountTo, accountToNewBalance);
 
-        return saveTransaction(command, accountFrom, accountTo).getId();
+        return saveTransaction(command, accountFrom, accountTo);
     }
 
-    public Page<TransactionViewEntity> getHistory(String accountUUID, FilteredPageRequest pageRequest) {
+    @Transactional
+    public TransactionData handleFailedTransaction(@Valid CreateTransactionCommand command) {
+        val accountFrom = getAccount(command.getFromAccountUUID());
+        val accountTo = getAccount(command.getToAccountUUID());
+
+        return saveTransaction(command, accountFrom, accountTo);
+    }
+
+    public Page<TransactionViewResponse> getHistory(String accountUUID, FilteredPageRequest pageRequest) {
         TransactionViewSpecification spec =
                 new TransactionViewSpecification(accountUUID);
 
-        return transactionViewRepository.findAll(spec, pageRequest.getPageable());
+        return transactionViewRepository.findAll(spec, pageRequest.getPageable())
+                .map(mapper::map);
     }
 
     private AccountEntity getAccount(String accountUUID) {
@@ -71,18 +81,20 @@ public class TransactionService {
         return balance.subtract(subAmount);
     }
 
-    private TransactionEntity saveTransaction(CreateTransactionCommand command, AccountEntity accountFrom, AccountEntity accountTo) {
+    private TransactionData saveTransaction(CreateTransactionCommand command, AccountEntity accountFrom, AccountEntity accountTo) {
         val transaction = new TransactionEntity();
         transaction.setFromAccount(accountFrom);
         transaction.setToAccount(accountTo);
         transaction.setAmount(command.getAmount());
         transaction.setCurrency(command.getCurrency());
+        transaction.setStatus(command.getStatus());
+        transaction.setRequestId(command.getRequestId());
 
         val savedTransaction = transactionRepository.save(transaction);
         saveView(savedTransaction, accountFrom, TransactionType.OUTGOING);
         saveView(savedTransaction, accountTo, TransactionType.INCOMING);
 
-        return savedTransaction;
+        return mapper.map(savedTransaction);
     }
 
     private void saveView(TransactionEntity savedTransaction, AccountEntity accountFrom, TransactionType outgoing) {

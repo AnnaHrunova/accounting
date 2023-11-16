@@ -5,5 +5,6 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 
 @SpringBootApplication(
         scanBasePackages = "com.mintos")
-public class IntegrationApplication extends SpringBootServletInitializer {}
+public class IntegrationApplication extends SpringBootServletInitializer {
+}
 

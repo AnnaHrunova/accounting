@@ -1,4 +1,4 @@
-package com.mintos.accounting.service;
+package com.mintos.accounting.service.account;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

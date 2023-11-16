@@ -6,7 +6,7 @@ import lombok.Data;
 @AllArgsConstructor
 @Data
 public class StringSearchCriteria {
-  private String field;
-  private String operator;
-  private String value;
+    private String field;
+    private String operator;
+    private String value;
 }

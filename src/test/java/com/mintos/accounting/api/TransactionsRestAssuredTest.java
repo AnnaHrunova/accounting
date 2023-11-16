@@ -1,12 +1,12 @@
 package com.mintos.accounting.api;
 
-import com.mintos.accounting.config.BaseRestAssuredTest;
-import com.mintos.accounting.api.model.CreateAccountResponse;
+import com.mintos.accounting.api.model.CreateTransactionRequest;
 import com.mintos.accounting.api.model.CreateTransactionResponse;
 import com.mintos.accounting.common.Currency;
+import com.mintos.accounting.common.TransactionStatus;
 import com.mintos.accounting.common.TransactionType;
+import com.mintos.accounting.config.BaseRestAssuredTest;
 import com.mintos.accounting.domain.account.AccountRepository;
-import com.mintos.accounting.domain.client.ClientEntity;
 import com.mintos.accounting.domain.client.ClientRepository;
 import com.mintos.accounting.domain.transaction.TransactionRepository;
 import com.mintos.accounting.domain.view.TransactionViewRepository;
@@ -46,20 +46,8 @@ class TransactionsRestAssuredTest extends BaseRestAssuredTest {
 
         val accountFromUUID = accountRepository.save(prepareAccount(client1, new BigDecimal("100"), Currency.EUR)).getId();
         val accountToUUID = accountRepository.save(prepareAccount(client2, new BigDecimal("50"), Currency.EUR)).getId();
-        val transactionRequest = prepareTransactionRequest(accountFromUUID.toString(), accountToUUID.toString(), new BigDecimal("30"), Currency.EUR);
-        val response =
-                given()
-                        .contentType(ContentType.JSON)
-                        .body(transactionRequest)
-                        .when()
-                        .post("/accounting/v1/transactions")
-                        .then()
-                        .assertThat()
-                        .statusCode(HttpStatus.CREATED.value())
-                        .body("transactionUUID", notNullValue())
-                        .extract()
-                        .body()
-                        .as(CreateTransactionResponse.class);
+        val transactionRequest = prepareDefaultTransactionRequest(accountFromUUID, accountToUUID);
+        final CreateTransactionResponse response = processTransaction(transactionRequest, HttpStatus.CREATED);
         val transactionUUID = UUID.fromString(response.getTransactionUUID());
         val savedTransaction = transactionRepository.findById(transactionUUID);
         assertThat(savedTransaction).isPresent();
@@ -72,42 +60,94 @@ class TransactionsRestAssuredTest extends BaseRestAssuredTest {
         assertThat(outgoingTransactions.size()).isEqualTo(1);
         val outgoingTransaction = outgoingTransactions.get(0);
         assertThat(outgoingTransaction.getType()).isEqualTo(TransactionType.OUTGOING);
-        assertThat(outgoingTransaction.getAccount().getBalance()).isEqualTo(toMoney(new BigDecimal("70")));
+        assertThat(outgoingTransaction.getAccount().getBalance()).isEqualTo(toMoney(new BigDecimal("95.00")));
 
         val incomingTransactions = transactionViewRepository.findAllByAccount_IdOrderByCreatedDateDesc(accountToUUID);
         assertThat(incomingTransactions.size()).isEqualTo(1);
         val incomingTransaction = incomingTransactions.get(0);
         assertThat(incomingTransaction.getType()).isEqualTo(TransactionType.INCOMING);
-        assertThat(incomingTransaction.getAccount().getBalance()).isEqualTo(toMoney(new BigDecimal("80")));
+        assertThat(incomingTransaction.getAccount().getBalance()).isEqualTo(toMoney(new BigDecimal("55.00")));
 
     }
 
     @Test
-    public void shouldCreateAccount() {
-        val newClient = new ClientEntity();
-        newClient.setFirstName("Jane");
-        newClient.setLastName("Smith");
-        val newClientUUID = clientRepository.save(newClient).getId();
+    public void shouldCreateTransactionWithCurrencyConversion() {
+        val client1 = clientRepository.save(prepareClient());
+        val client2 = clientRepository.save(prepareClient());
 
-        val newAccountRequest = prepareAccountRequest();
-        val response =
-                given()
-                        .contentType(ContentType.JSON)
-                        .body(newAccountRequest)
-                        .when()
-                        .post("/accounting/v1/clients/{1}/accounts", newClientUUID)
-                        .then()
-                        .assertThat()
-                        .statusCode(HttpStatus.CREATED.value())
-                        .body("accountUUID", notNullValue())
-                        .extract()
-                        .body()
-                        .as(CreateAccountResponse.class);
-        val newAccountUUID = UUID.fromString(response.getAccountUUID());
-        val savedAccount = accountRepository.findById(newAccountUUID);
-        assertThat(savedAccount).isPresent();
-        assertThat(savedAccount.get().getBalance()).isEqualTo(toMoney(BigDecimal.ZERO));
-        assertThat(savedAccount.get().getCurrency()).isEqualTo(newAccountRequest.getCurrency());
+        val accountFromUUID = accountRepository.save(prepareAccount(client1, new BigDecimal("100"), Currency.USD)).getId();
+        val accountToUUID = accountRepository.save(prepareAccount(client2, new BigDecimal("50"), Currency.EUR)).getId();
+        val transactionRequest = prepareDefaultTransactionRequest(accountFromUUID, accountToUUID);
+        final CreateTransactionResponse response = processTransaction(transactionRequest, HttpStatus.CREATED);
+        val transactionUUID = UUID.fromString(response.getTransactionUUID());
+        val savedTransaction = transactionRepository.findById(transactionUUID);
+        assertThat(savedTransaction).isPresent();
+        assertThat(savedTransaction.get().getAmount()).isEqualTo(transactionRequest.getAmount());
+        assertThat(savedTransaction.get().getCurrency()).isEqualTo(transactionRequest.getCurrency());
+        assertThat(savedTransaction.get().getFromAccount().getId().toString()).isEqualTo(transactionRequest.getFromAccountUUID());
+        assertThat(savedTransaction.get().getToAccount().getId().toString()).isEqualTo(transactionRequest.getToAccountUUID());
+
+        val outgoingTransactions = transactionViewRepository.findAllByAccount_IdOrderByCreatedDateDesc(accountFromUUID);
+        assertThat(outgoingTransactions.size()).isEqualTo(1);
+        val outgoingTransaction = outgoingTransactions.get(0);
+        assertThat(outgoingTransaction.getType()).isEqualTo(TransactionType.OUTGOING);
+        assertThat(outgoingTransaction.getTransaction().getStatus()).isEqualTo(TransactionStatus.SUCCESS);
+        assertThat(outgoingTransaction.getAccount().getBalance()).isEqualTo(toMoney(new BigDecimal("99.75"))); //100 USD - (5 * 0.05) USD
+
+        val incomingTransactions = transactionViewRepository.findAllByAccount_IdOrderByCreatedDateDesc(accountToUUID);
+        assertThat(incomingTransactions.size()).isEqualTo(1);
+        val incomingTransaction = incomingTransactions.get(0);
+        assertThat(incomingTransaction.getType()).isEqualTo(TransactionType.INCOMING);
+        assertThat(incomingTransaction.getTransaction().getStatus()).isEqualTo(TransactionStatus.SUCCESS);
+        assertThat(incomingTransaction.getAccount().getBalance()).isEqualTo(toMoney(new BigDecimal("55.00"))); //50 EUR + 5 EUR
     }
 
+    @Test
+    public void shouldValidateTransactionWithCurrencyConversion() {
+        val client1 = clientRepository.save(prepareClient());
+        val client2 = clientRepository.save(prepareClient());
+
+        val accountFromUUID = accountRepository.save(prepareAccount(client1, new BigDecimal("100"), Currency.USD)).getId();
+        val accountToUUID = accountRepository.save(prepareAccount(client2, new BigDecimal("50"), Currency.EUR)).getId();
+        val transactionRequest = prepareDefaultTransactionRequest(accountFromUUID, accountToUUID);
+        transactionRequest.setCurrency(Currency.GBP);
+        val response = processTransaction(transactionRequest, HttpStatus.PRECONDITION_FAILED);
+        val transactionUUID = UUID.fromString(response.getTransactionUUID());
+        val savedTransaction = transactionRepository.findById(transactionUUID);
+        assertThat(savedTransaction).isPresent();
+        assertThat(savedTransaction.get().getAmount()).isEqualTo(transactionRequest.getAmount());
+        assertThat(savedTransaction.get().getCurrency()).isEqualTo(transactionRequest.getCurrency());
+        assertThat(savedTransaction.get().getFromAccount().getId().toString()).isEqualTo(transactionRequest.getFromAccountUUID());
+        assertThat(savedTransaction.get().getToAccount().getId().toString()).isEqualTo(transactionRequest.getToAccountUUID());
+
+        val outgoingTransactions = transactionViewRepository.findAllByAccount_IdOrderByCreatedDateDesc(accountFromUUID);
+        assertThat(outgoingTransactions.size()).isEqualTo(1);
+        val outgoingTransaction = outgoingTransactions.get(0);
+        assertThat(outgoingTransaction.getType()).isEqualTo(TransactionType.OUTGOING);
+        assertThat(outgoingTransaction.getTransaction().getStatus()).isEqualTo(TransactionStatus.ERROR);
+        assertThat(outgoingTransaction.getAccount().getBalance()).isEqualTo(toMoney(new BigDecimal("100")));
+
+        val incomingTransactions = transactionViewRepository.findAllByAccount_IdOrderByCreatedDateDesc(accountToUUID);
+        assertThat(incomingTransactions.size()).isEqualTo(1);
+        val incomingTransaction = incomingTransactions.get(0);
+        assertThat(incomingTransaction.getType()).isEqualTo(TransactionType.INCOMING);
+        assertThat(incomingTransaction.getTransaction().getStatus()).isEqualTo(TransactionStatus.ERROR);
+        assertThat(incomingTransaction.getAccount().getBalance()).isEqualTo(toMoney(new BigDecimal("50"))); //50 EUR + 5 EUR
+
+    }
+
+    private static CreateTransactionResponse processTransaction(CreateTransactionRequest transactionRequest, HttpStatus expectedHttpStatus) {
+        return given()
+                .contentType(ContentType.JSON)
+                .body(transactionRequest)
+                .when()
+                .post("/accounting/v1/transactions")
+                .then()
+                .assertThat()
+                .statusCode(expectedHttpStatus.value())
+                .body("transactionUUID", notNullValue())
+                .extract()
+                .body()
+                .as(CreateTransactionResponse.class);
+    }
 }

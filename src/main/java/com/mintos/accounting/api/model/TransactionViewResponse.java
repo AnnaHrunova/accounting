@@ -2,6 +2,7 @@ package com.mintos.accounting.api.model;
 
 
 import com.mintos.accounting.common.Currency;
+import com.mintos.accounting.common.TransactionStatus;
 import com.mintos.accounting.common.TransactionType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,11 +18,17 @@ import java.time.OffsetDateTime;
 @NoArgsConstructor
 public class TransactionViewResponse {
 
+    private String requestId;
+
+    private String transactionUUID;
+
     private TransactionType type;
 
     private Currency currency;
 
     private BigDecimal amount;
+
+    private TransactionStatus status;
 
     private OffsetDateTime dateTime;
 }

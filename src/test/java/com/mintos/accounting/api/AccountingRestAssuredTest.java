@@ -1,8 +1,9 @@
 package com.mintos.accounting.api;
 
-import com.mintos.accounting.config.BaseRestAssuredTest;
+import com.mintos.accounting.api.error.RestValidationResponse;
 import com.mintos.accounting.api.model.CreateAccountResponse;
 import com.mintos.accounting.api.model.CreateClientResponse;
+import com.mintos.accounting.config.BaseRestAssuredTest;
 import com.mintos.accounting.domain.account.AccountRepository;
 import com.mintos.accounting.domain.client.ClientRepository;
 import io.restassured.http.ContentType;
@@ -19,7 +20,6 @@ import static com.mintos.accounting.common.FormattingUtils.toMoney;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 class AccountingRestAssuredTest extends BaseRestAssuredTest {
 
@@ -76,5 +76,28 @@ class AccountingRestAssuredTest extends BaseRestAssuredTest {
         assertThat(savedAccount).isPresent();
         assertThat(savedAccount.get().getBalance()).isEqualTo(toMoney(BigDecimal.ZERO));
         assertThat(savedAccount.get().getCurrency()).isEqualTo(newAccountRequest.getCurrency());
+    }
+
+    @Test
+    public void shouldValidateAccountCreation() {
+        val newClient = prepareClient();
+        val newClientUUID = clientRepository.save(newClient).getId();
+
+        val newAccountRequest = prepareAccountRequest(new BigDecimal("-100"));
+        val response =
+                given()
+                        .contentType(ContentType.JSON)
+                        .body(newAccountRequest)
+                        .when()
+                        .post("/accounting/v1/clients/{1}/accounts", newClientUUID)
+                        .then()
+                        .assertThat()
+                        .statusCode(HttpStatus.BAD_REQUEST.value())
+                        .extract()
+                        .body()
+                        .as(RestValidationResponse.class);
+        assertThat(response.getFieldValidationErrors().size()).isEqualTo(1);
+        assertThat(response.getFieldValidationErrors().get(0).field()).isEqualTo("balance");
+        assertThat(response.getFieldValidationErrors().get(0).message()).isEqualTo("must be greater than 0.01");
     }
 }
