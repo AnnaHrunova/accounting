@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.OffsetDateTime;
+import java.util.UUID;
 
 @Data
 @Builder
@@ -15,7 +16,7 @@ import java.time.OffsetDateTime;
 @NoArgsConstructor
 public class CreateTransactionResponse {
 
-    private String transactionUUID;
+    private UUID transactionUUID;
 
     private OffsetDateTime dateTime;
 

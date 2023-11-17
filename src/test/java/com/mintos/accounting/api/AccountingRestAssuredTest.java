@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 import static com.mintos.accounting.TestFixtures.*;
 import static com.mintos.accounting.common.FormattingUtils.toMoney;
@@ -45,7 +44,7 @@ class AccountingRestAssuredTest extends BaseRestAssuredTest {
                         .extract()
                         .body()
                         .as(CreateClientResponse.class);
-        val newClientUUID = UUID.fromString(response.getClientUUID());
+        val newClientUUID = response.getClientUUID();
         val savedClient = clientRepository.findById(newClientUUID);
         assertThat(savedClient).isPresent();
         assertThat(savedClient.get().getFirstName()).isEqualTo(newClientRequest.getFirstName());
@@ -71,10 +70,10 @@ class AccountingRestAssuredTest extends BaseRestAssuredTest {
                         .extract()
                         .body()
                         .as(CreateAccountResponse.class);
-        val newAccountUUID = UUID.fromString(response.getAccountUUID());
+        val newAccountUUID = response.getAccountUUID();
         val savedAccount = accountRepository.findById(newAccountUUID);
         assertThat(savedAccount).isPresent();
-        assertThat(savedAccount.get().getBalance()).isEqualTo(toMoney(BigDecimal.ZERO));
+        assertThat(savedAccount.get().getBalance()).isEqualTo(toMoney(newAccountRequest.getBalance()));
         assertThat(savedAccount.get().getCurrency()).isEqualTo(newAccountRequest.getCurrency());
     }
 

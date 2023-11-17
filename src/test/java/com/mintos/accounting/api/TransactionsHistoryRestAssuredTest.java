@@ -109,10 +109,10 @@ class TransactionsHistoryRestAssuredTest extends BaseRestAssuredTest {
                         .extract()
                         .body()
                         .as(CreateAccountResponse.class);
-        val newAccountUUID = UUID.fromString(response.getAccountUUID());
+        val newAccountUUID = response.getAccountUUID();
         val savedAccount = accountRepository.findById(newAccountUUID);
         assertThat(savedAccount).isPresent();
-        assertThat(savedAccount.get().getBalance()).isEqualTo(toMoney(BigDecimal.ZERO));
+        assertThat(savedAccount.get().getBalance()).isEqualTo(toMoney(newAccountRequest.getBalance()));
         assertThat(savedAccount.get().getCurrency()).isEqualTo(newAccountRequest.getCurrency());
     }
 

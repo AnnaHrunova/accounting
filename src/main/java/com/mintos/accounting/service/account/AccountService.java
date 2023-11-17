@@ -12,7 +12,6 @@ import lombok.val;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
-import java.math.BigDecimal;
 import java.util.UUID;
 
 import static com.mintos.accounting.common.FormattingUtils.toMoney;
@@ -34,12 +33,13 @@ public class AccountService {
     }
 
     public UUID createAccount(@Valid CreateAccountCommand command) {
+
         val client = clientRepository.findById(UUID.fromString(command.getClientUUID()))
                 .orElseThrow(() -> new ResourceNotFoundException(Reason.CLIENT_NOT_FOUND, command.getClientUUID()));
         val account = new AccountEntity();
         account.setClient(client);
         account.setCurrency(command.getCurrency());
-        account.setBalance(toMoney(BigDecimal.ZERO));
+        account.setBalance(toMoney(command.getInitialAmount()));
         return accountRepository.save(account).getId();
     }
 

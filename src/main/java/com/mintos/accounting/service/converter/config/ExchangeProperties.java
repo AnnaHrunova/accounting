@@ -1,4 +1,4 @@
-package com.mintos.accounting.service.converter;
+package com.mintos.accounting.service.converter.config;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -9,19 +9,19 @@ import java.math.BigDecimal;
 
 @Data
 @ConfigurationProperties(prefix = "exchange")
-public class ConverterProperties {
+public class ExchangeProperties {
 
     @NotBlank
-    private String host;
-
-    @NotBlank
-    private String converter;
-
-    @NotBlank
-    private String list;
+    private String baseUrl;
 
     @NotBlank
     private String apiKey;
+
+    @NotNull
+    private ConverterProperties convert;
+
+    @NotNull
+    private CurrencyProperties currency;
 
     @NotNull
     private BigDecimal mockRate;

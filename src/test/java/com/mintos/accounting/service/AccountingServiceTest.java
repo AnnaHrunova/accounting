@@ -1,17 +1,16 @@
 package com.mintos.accounting.service;
 
 import com.mintos.accounting.api.model.CreateClientRequest;
+import com.mintos.accounting.config.BaseIntegrationTest;
 import jakarta.validation.ConstraintViolationException;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@SpringBootTest
-class AccountingServiceTest {
+class AccountingServiceTest extends BaseIntegrationTest {
 
     @Autowired
     private AccountingService target;
@@ -22,7 +21,7 @@ class AccountingServiceTest {
         request.setFirstName("John");
         request.setLastName("Doe");
         val result = target.createClient(request);
-        assertThat(result.getClientUUID()).isNotBlank();
+        assertThat(result.getClientUUID()).isNotNull();
     }
 
 

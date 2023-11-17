@@ -15,7 +15,7 @@ import java.util.Objects;
 @SpringBootTest(classes = IntegrationApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("mock")
-public class BaseRestAssuredTest {
+public class BaseRestAssuredTest extends BaseIntegrationTest {
     @LocalServerPort
     protected Integer localPort;
 

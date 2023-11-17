@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Builder
 @Data
 @AllArgsConstructor
@@ -19,4 +21,7 @@ public class CreateAccountCommand {
 
     @NotNull
     private Currency currency;
+
+    @NotNull
+    private BigDecimal initialAmount;
 }

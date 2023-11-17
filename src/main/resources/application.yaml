@@ -2,8 +2,20 @@ accounting:
   api:
     v1: accounting/v1
 exchange:
-  host: http://api.exchangerate.host
+  base-url: http://api.exchangerate.host/%s?access_key=%s
   api-key: a74a9626514e8e7b5fb7b4e42e7e338c
-  converter: /convert?access_key=%s&from=%s&to=%s&amount=%s
-  list: /list?access_key=%s
+  convert:
+    path: /convert
+    query: "&from=%s&to=%s&amount=%s"
+  currency:
+    path: /list
+    fallback: EUR,GBP,USD
   mock-rate: 0.05
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml

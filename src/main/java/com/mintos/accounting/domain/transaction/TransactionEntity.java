@@ -2,6 +2,7 @@ package com.mintos.accounting.domain.transaction;
 
 import com.mintos.accounting.common.Currency;
 import com.mintos.accounting.common.TransactionStatus;
+import com.mintos.accounting.domain.AccountingSchema;
 import com.mintos.accounting.domain.BaseEntity;
 import com.mintos.accounting.domain.account.AccountEntity;
 import jakarta.persistence.*;
@@ -13,7 +14,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @Entity
-@Table(name = "transaction")
+@Table(name = "transaction", schema = AccountingSchema.NAME)
 public class TransactionEntity extends BaseEntity {
 
     private String requestId;

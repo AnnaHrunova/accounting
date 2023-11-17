@@ -91,17 +91,31 @@ public class TransactionService {
         transaction.setRequestId(command.getRequestId());
 
         val savedTransaction = transactionRepository.save(transaction);
-        saveView(savedTransaction, accountFrom, TransactionType.OUTGOING);
-        saveView(savedTransaction, accountTo, TransactionType.INCOMING);
+        saveOutgoingView(savedTransaction, accountFrom, command);
+        saveIncomingView(savedTransaction, accountTo);
 
         return mapper.map(savedTransaction);
     }
 
-    private void saveView(TransactionEntity savedTransaction, AccountEntity accountFrom, TransactionType outgoing) {
+    private void saveIncomingView(TransactionEntity savedTransaction, AccountEntity account) {
         val transactionViewFrom = new TransactionViewEntity();
         transactionViewFrom.setTransaction(savedTransaction);
-        transactionViewFrom.setAccount(accountFrom);
-        transactionViewFrom.setType(outgoing);
+        transactionViewFrom.setAccount(account);
+        transactionViewFrom.setType(TransactionType.INCOMING);
+        transactionViewRepository.save(transactionViewFrom);
+    }
+
+    private void saveOutgoingView(TransactionEntity savedTransaction,
+                                  AccountEntity account,
+                                  CreateTransactionCommand command) {
+        val transactionViewFrom = new TransactionViewEntity();
+        transactionViewFrom.setTransaction(savedTransaction);
+        transactionViewFrom.setAccount(account);
+        transactionViewFrom.setType(TransactionType.OUTGOING);
+        if (command.getConvertedAmount() != null && command.getCurrency() != null) {
+            transactionViewFrom.setConvertedFrom(command.getCurrency());
+            transactionViewFrom.setConvertedAmount(command.getConvertedAmount());
+        }
         transactionViewRepository.save(transactionViewFrom);
     }
 

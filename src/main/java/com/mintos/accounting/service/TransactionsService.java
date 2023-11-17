@@ -8,7 +8,7 @@ import com.mintos.accounting.common.TransactionStatus;
 import com.mintos.accounting.exceptions.TransactionValidationException;
 import com.mintos.accounting.service.account.AccountData;
 import com.mintos.accounting.service.account.AccountService;
-import com.mintos.accounting.service.converter.CurrencyConversionService;
+import com.mintos.accounting.service.converter.CurrencyExchangeService;
 import com.mintos.accounting.service.transaction.CreateTransactionCommand;
 import com.mintos.accounting.service.transaction.TransactionData;
 import com.mintos.accounting.service.transaction.TransactionService;
@@ -29,7 +29,7 @@ public class TransactionsService {
 
     private final AccountService accountService;
     private final TransactionService transactionService;
-    private final CurrencyConversionService currencyConverter;
+    private final CurrencyExchangeService exchangeService;
     private final CommandMapper commandMapper;
 
     public CreateTransactionResponse createTransaction(@Valid CreateTransactionRequest request) {
@@ -39,11 +39,11 @@ public class TransactionsService {
         val targetCurrency = request.getCurrency();
         val originCurrency = fromAccount.getCurrency();
         if (originCurrency != targetCurrency) {
-            command.setConvertedAmount(currencyConverter.convert(command.getAmount(), targetCurrency, originCurrency));
+            command.setConvertedAmount(exchangeService.convert(command.getAmount(), targetCurrency, originCurrency));
         }
         val savedTransaction = performTransaction(command, fromAccount, toAccount);
         return CreateTransactionResponse.builder()
-                .transactionUUID(savedTransaction.getId().toString())
+                .transactionUUID(savedTransaction.getId())
                 .dateTime(savedTransaction.getCreatedDate())
                 .status(savedTransaction.getStatus())
                 .build();
@@ -61,7 +61,7 @@ public class TransactionsService {
     private TransactionData performTransaction(CreateTransactionCommand command, AccountData fromAccount, AccountData toAccount) {
         TransactionData savedTransaction;
         try {
-            validateTransaction(fromAccount, toAccount, command);
+            validateTransaction(fromAccount, toAccount, command, exchangeService.getSupportedCurrencies());
             command.setStatus(TransactionStatus.SUCCESS);
             savedTransaction = transactionService.performTransaction(command);
         } catch (TransactionValidationException ex) {

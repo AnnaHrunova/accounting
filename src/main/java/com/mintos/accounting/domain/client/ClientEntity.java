@@ -1,5 +1,6 @@
 package com.mintos.accounting.domain.client;
 
+import com.mintos.accounting.domain.AccountingSchema;
 import com.mintos.accounting.domain.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -9,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "client")
+@Table(name = "client", schema = AccountingSchema.NAME)
 public class ClientEntity extends BaseEntity {
 
     private String firstName;

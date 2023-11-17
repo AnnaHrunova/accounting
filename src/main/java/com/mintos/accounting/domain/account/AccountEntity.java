@@ -1,6 +1,7 @@
 package com.mintos.accounting.domain.account;
 
 import com.mintos.accounting.common.Currency;
+import com.mintos.accounting.domain.AccountingSchema;
 import com.mintos.accounting.domain.BaseEntity;
 import com.mintos.accounting.domain.client.ClientEntity;
 import jakarta.persistence.*;
@@ -14,7 +15,7 @@ import java.math.BigDecimal;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "account")
+@Table(name = "account", schema = AccountingSchema.NAME)
 public class AccountEntity extends BaseEntity {
 
     @Enumerated(EnumType.STRING)

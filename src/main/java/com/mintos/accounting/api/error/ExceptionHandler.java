@@ -1,5 +1,7 @@
 package com.mintos.accounting.api.error;
 
+import com.mintos.accounting.exceptions.AccountValidationException;
+import com.mintos.accounting.exceptions.TransactionValidationException;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +28,7 @@ import static org.springframework.http.ResponseEntity.status;
 public class ExceptionHandler {
 
     @org.springframework.web.bind.annotation.ExceptionHandler({
-            IllegalArgumentException.class
+            IllegalArgumentException.class, AccountValidationException.class, TransactionValidationException.class
     })
     @ResponseStatus(BAD_REQUEST)
     public ResponseEntity<String> handleCommonBadRequestErrors(

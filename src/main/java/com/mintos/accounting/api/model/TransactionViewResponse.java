@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.UUID;
 
 @Data
 @Builder
@@ -20,7 +21,7 @@ public class TransactionViewResponse {
 
     private String requestId;
 
-    private String transactionUUID;
+    private UUID transactionUUID;
 
     private TransactionType type;
 

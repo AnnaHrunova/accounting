@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 import static com.mintos.accounting.TestFixtures.*;
 import static com.mintos.accounting.common.FormattingUtils.toMoney;
@@ -48,7 +47,7 @@ class TransactionsRestAssuredTest extends BaseRestAssuredTest {
         val accountToUUID = accountRepository.save(prepareAccount(client2, new BigDecimal("50"), Currency.EUR)).getId();
         val transactionRequest = prepareDefaultTransactionRequest(accountFromUUID, accountToUUID);
         final CreateTransactionResponse response = processTransaction(transactionRequest, HttpStatus.CREATED);
-        val transactionUUID = UUID.fromString(response.getTransactionUUID());
+        val transactionUUID = response.getTransactionUUID();
         val savedTransaction = transactionRepository.findById(transactionUUID);
         assertThat(savedTransaction).isPresent();
         assertThat(savedTransaction.get().getAmount()).isEqualTo(transactionRequest.getAmount());
@@ -79,7 +78,7 @@ class TransactionsRestAssuredTest extends BaseRestAssuredTest {
         val accountToUUID = accountRepository.save(prepareAccount(client2, new BigDecimal("50"), Currency.EUR)).getId();
         val transactionRequest = prepareDefaultTransactionRequest(accountFromUUID, accountToUUID);
         final CreateTransactionResponse response = processTransaction(transactionRequest, HttpStatus.CREATED);
-        val transactionUUID = UUID.fromString(response.getTransactionUUID());
+        val transactionUUID = response.getTransactionUUID();
         val savedTransaction = transactionRepository.findById(transactionUUID);
         assertThat(savedTransaction).isPresent();
         assertThat(savedTransaction.get().getAmount()).isEqualTo(transactionRequest.getAmount());
@@ -112,7 +111,7 @@ class TransactionsRestAssuredTest extends BaseRestAssuredTest {
         val transactionRequest = prepareDefaultTransactionRequest(accountFromUUID, accountToUUID);
         transactionRequest.setCurrency(Currency.GBP);
         val response = processTransaction(transactionRequest, HttpStatus.PRECONDITION_FAILED);
-        val transactionUUID = UUID.fromString(response.getTransactionUUID());
+        val transactionUUID = response.getTransactionUUID();
         val savedTransaction = transactionRepository.findById(transactionUUID);
         assertThat(savedTransaction).isPresent();
         assertThat(savedTransaction.get().getAmount()).isEqualTo(transactionRequest.getAmount());
