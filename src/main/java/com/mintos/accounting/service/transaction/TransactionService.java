@@ -42,9 +42,11 @@ public class TransactionService {
 
         val accountFromNewBalance = calculateOutgoingBalance(command, accountFrom.getBalance());
         updateAccount(accountFrom, accountFromNewBalance);
+        log.info("Account from: {}, {}", accountFrom.getEntityVersion(), accountFrom.getBalance());
 
         val accountToNewBalance = accountTo.getBalance().add(command.getAmount());
         updateAccount(accountTo, accountToNewBalance);
+        log.info("Account to: {}, {}", accountTo.getEntityVersion(), accountTo.getBalance());
 
         return saveTransaction(command, accountFrom, accountTo);
     }
@@ -92,8 +94,8 @@ public class TransactionService {
         transaction.setRequestId(command.getRequestId());
 
         val savedTransaction = transactionRepository.save(transaction);
-        saveOutgoingView(savedTransaction, accountFrom, command);
-        saveIncomingView(savedTransaction, accountTo);
+        //saveOutgoingView(savedTransaction, accountFrom, command);
+        //saveIncomingView(savedTransaction, accountTo);
 
         return mapper.map(savedTransaction);
     }
