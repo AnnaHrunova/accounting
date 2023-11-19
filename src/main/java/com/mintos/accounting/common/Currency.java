@@ -3,5 +3,7 @@ package com.mintos.accounting.common;
 public enum Currency {
     EUR,
     USD,
-    GBP
+    GBP,
+    QQQ //imitate unsupported currency
+
 }

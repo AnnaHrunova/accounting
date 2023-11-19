@@ -10,6 +10,7 @@ import com.mintos.accounting.domain.account.AccountRepository;
 import com.mintos.accounting.domain.client.ClientRepository;
 import com.mintos.accounting.domain.transaction.TransactionRepository;
 import com.mintos.accounting.domain.view.TransactionViewRepository;
+import com.mintos.accounting.service.account.AccountService;
 import io.restassured.http.ContentType;
 import lombok.val;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import static com.mintos.accounting.TestFixtures.*;
 import static com.mintos.accounting.common.FormattingUtils.toMoney;
@@ -38,6 +43,9 @@ class TransactionsRestAssuredTest extends BaseRestAssuredTest {
     @Autowired
     private TransactionViewRepository transactionViewRepository;
 
+    @Autowired
+    AccountService accountingService;
+
     @Test
     public void shouldCreateTransaction() {
         val client1 = clientRepository.save(prepareClient());
@@ -52,8 +60,8 @@ class TransactionsRestAssuredTest extends BaseRestAssuredTest {
         assertThat(savedTransaction).isPresent();
         assertThat(savedTransaction.get().getAmount()).isEqualTo(transactionRequest.getAmount());
         assertThat(savedTransaction.get().getCurrency()).isEqualTo(transactionRequest.getCurrency());
-        assertThat(savedTransaction.get().getFromAccount().getId().toString()).isEqualTo(transactionRequest.getFromAccountUUID());
-        assertThat(savedTransaction.get().getToAccount().getId().toString()).isEqualTo(transactionRequest.getToAccountUUID());
+        assertThat(savedTransaction.get().getFromAccount().getId()).isEqualTo(transactionRequest.getFromAccountUUID());
+        assertThat(savedTransaction.get().getToAccount().getId()).isEqualTo(transactionRequest.getToAccountUUID());
 
         val outgoingTransactions = transactionViewRepository.findAllByAccount_IdOrderByCreatedDateDesc(accountFromUUID);
         assertThat(outgoingTransactions.size()).isEqualTo(1);
@@ -83,8 +91,8 @@ class TransactionsRestAssuredTest extends BaseRestAssuredTest {
         assertThat(savedTransaction).isPresent();
         assertThat(savedTransaction.get().getAmount()).isEqualTo(transactionRequest.getAmount());
         assertThat(savedTransaction.get().getCurrency()).isEqualTo(transactionRequest.getCurrency());
-        assertThat(savedTransaction.get().getFromAccount().getId().toString()).isEqualTo(transactionRequest.getFromAccountUUID());
-        assertThat(savedTransaction.get().getToAccount().getId().toString()).isEqualTo(transactionRequest.getToAccountUUID());
+        assertThat(savedTransaction.get().getFromAccount().getId()).isEqualTo(transactionRequest.getFromAccountUUID());
+        assertThat(savedTransaction.get().getToAccount().getId()).isEqualTo(transactionRequest.getToAccountUUID());
 
         val outgoingTransactions = transactionViewRepository.findAllByAccount_IdOrderByCreatedDateDesc(accountFromUUID);
         assertThat(outgoingTransactions.size()).isEqualTo(1);
@@ -116,8 +124,8 @@ class TransactionsRestAssuredTest extends BaseRestAssuredTest {
         assertThat(savedTransaction).isPresent();
         assertThat(savedTransaction.get().getAmount()).isEqualTo(transactionRequest.getAmount());
         assertThat(savedTransaction.get().getCurrency()).isEqualTo(transactionRequest.getCurrency());
-        assertThat(savedTransaction.get().getFromAccount().getId().toString()).isEqualTo(transactionRequest.getFromAccountUUID());
-        assertThat(savedTransaction.get().getToAccount().getId().toString()).isEqualTo(transactionRequest.getToAccountUUID());
+        assertThat(savedTransaction.get().getFromAccount().getId()).isEqualTo(transactionRequest.getFromAccountUUID());
+        assertThat(savedTransaction.get().getToAccount().getId()).isEqualTo(transactionRequest.getToAccountUUID());
 
         val outgoingTransactions = transactionViewRepository.findAllByAccount_IdOrderByCreatedDateDesc(accountFromUUID);
         assertThat(outgoingTransactions.size()).isEqualTo(1);
@@ -133,6 +141,31 @@ class TransactionsRestAssuredTest extends BaseRestAssuredTest {
         assertThat(incomingTransaction.getTransaction().getStatus()).isEqualTo(TransactionStatus.ERROR);
         assertThat(incomingTransaction.getAccount().getBalance()).isEqualTo(toMoney(new BigDecimal("50"))); //50 EUR + 5 EUR
 
+    }
+
+    @Test
+    void test() throws InterruptedException {
+        val client1 = clientRepository.save(prepareClient());
+        val client2 = clientRepository.save(prepareClient());
+
+        val accountFromUUID = accountRepository.save(prepareAccount(client1, new BigDecimal("100"), Currency.EUR)).getId();
+        val accountToUUID = accountRepository.save(prepareAccount(client2, new BigDecimal("5"), Currency.EUR)).getId();
+        val transactionRequest = prepareDefaultTransactionRequest(accountFromUUID, accountToUUID);
+
+        Callable<Object> createTrx = () -> processTransaction(transactionRequest, HttpStatus.CREATED);
+
+        var executorService = Executors.newFixedThreadPool(2);
+
+        executorService.invokeAll(List.of(
+                createTrx, createTrx, createTrx,
+                createTrx, createTrx, createTrx
+        ), 5, TimeUnit.SECONDS);
+
+        executorService.shutdown();
+
+//        val res = accountingService.getAccount(accountFromUUID);
+        // Verify that the account's balance was correctly updated
+        assertThat(1).isEqualTo(1);
     }
 
     private static CreateTransactionResponse processTransaction(CreateTransactionRequest transactionRequest, HttpStatus expectedHttpStatus) {

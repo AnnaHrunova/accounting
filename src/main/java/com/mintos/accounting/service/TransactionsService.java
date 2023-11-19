@@ -5,6 +5,7 @@ import com.mintos.accounting.api.model.CreateTransactionResponse;
 import com.mintos.accounting.api.model.FilteredPageRequest;
 import com.mintos.accounting.api.model.TransactionViewResponse;
 import com.mintos.accounting.common.TransactionStatus;
+import com.mintos.accounting.domain.account.AccountRepository;
 import com.mintos.accounting.exceptions.TransactionValidationException;
 import com.mintos.accounting.service.account.AccountData;
 import com.mintos.accounting.service.account.AccountService;
@@ -14,6 +15,7 @@ import com.mintos.accounting.service.transaction.TransactionData;
 import com.mintos.accounting.service.transaction.TransactionService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -25,9 +27,11 @@ import static com.mintos.accounting.service.transaction.TransactionRules.validat
 @Component
 @AllArgsConstructor
 @Validated
+@Slf4j
 public class TransactionsService {
 
     private final AccountService accountService;
+    private final AccountRepository accountRepository;
     private final TransactionService transactionService;
     private final CurrencyExchangeService exchangeService;
     private final CommandMapper commandMapper;

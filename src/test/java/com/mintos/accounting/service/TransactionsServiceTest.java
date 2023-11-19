@@ -49,8 +49,8 @@ class TransactionsServiceTest extends BaseIntegrationTest {
         val transactionRequest = CreateTransactionRequest.builder()
                 .requestId(requestId)
                 .amount(new BigDecimal("10"))
-                .fromAccountUUID(accountFrom.getId().toString())
-                .toAccountUUID(accountTo.getId().toString())
+                .fromAccountUUID(accountFrom.getId())
+                .toAccountUUID(accountTo.getId())
                 .currency(Currency.EUR)
                 .build();
         val response = target.createTransaction(transactionRequest);
@@ -72,8 +72,8 @@ class TransactionsServiceTest extends BaseIntegrationTest {
         val transactionRequest = CreateTransactionRequest.builder()
                 .requestId(requestId)
                 .amount(new BigDecimal("10"))
-                .fromAccountUUID(accountFrom.getId().toString())
-                .toAccountUUID(accountTo.getId().toString())
+                .fromAccountUUID(accountFrom.getId())
+                .toAccountUUID(accountTo.getId())
                 .currency(Currency.GBP)
                 .build();
         val response = target.createTransaction(transactionRequest);
@@ -110,8 +110,8 @@ class TransactionsServiceTest extends BaseIntegrationTest {
         val transactionRequest = CreateTransactionRequest.builder()
                 .requestId(requestId)
                 .amount(new BigDecimal("10"))
-                .fromAccountUUID(account.getId().toString())
-                .toAccountUUID(account.getId().toString())
+                .fromAccountUUID(account.getId())
+                .toAccountUUID(account.getId())
                 .currency(Currency.EUR)
                 .build();
         val response = target.createTransaction(transactionRequest);

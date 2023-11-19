@@ -14,6 +14,7 @@ import com.mintos.accounting.exceptions.Reason;
 import com.mintos.accounting.exceptions.ResourceNotFoundException;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
@@ -26,6 +27,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Component
 @Validated
+@Slf4j
 public class TransactionService {
 
     private final AccountRepository accountRepository;
@@ -47,7 +49,6 @@ public class TransactionService {
         return saveTransaction(command, accountFrom, accountTo);
     }
 
-    @Transactional
     public TransactionData handleFailedTransaction(@Valid CreateTransactionCommand command) {
         val accountFrom = getAccount(command.getFromAccountUUID());
         val accountTo = getAccount(command.getToAccountUUID());

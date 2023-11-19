@@ -38,8 +38,8 @@ public class TestFixtures {
         request.setRequestId(UUID.randomUUID().toString());
         request.setCurrency(Currency.EUR);
         request.setAmount(toMoney(new BigDecimal("5")));
-        request.setFromAccountUUID(accountFrom.toString());
-        request.setToAccountUUID(accountTo.toString());
+        request.setFromAccountUUID(accountFrom);
+        request.setToAccountUUID(accountTo);
         return request;
     }
 

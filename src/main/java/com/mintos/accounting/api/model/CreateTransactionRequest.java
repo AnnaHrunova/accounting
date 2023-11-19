@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Data
 @Builder
@@ -20,11 +21,11 @@ public class CreateTransactionRequest {
     @NotBlank
     private String requestId;
 
-    @NotBlank
-    private String fromAccountUUID;
+    @NotNull
+    private UUID fromAccountUUID;
 
-    @NotBlank
-    private String toAccountUUID;
+    @NotNull
+    private UUID toAccountUUID;
 
     @NotNull
     private BigDecimal amount;

@@ -1,7 +1,6 @@
-package com.mintos.accounting.service.account;
+package com.mintos.accounting.api.model;
 
 import com.mintos.accounting.common.Currency;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,18 +9,13 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-@Builder
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateAccountCommand {
+public class AccountDataResponse {
 
-    @NotNull
-    private UUID clientUUID;
-
-    @NotNull
+    private UUID accountId;
+    private BigDecimal balance;
     private Currency currency;
-
-    @NotNull
-    private BigDecimal initialAmount;
 }

@@ -12,7 +12,9 @@ import lombok.val;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static com.mintos.accounting.common.FormattingUtils.toMoney;
 
@@ -34,8 +36,8 @@ public class AccountService {
 
     public UUID createAccount(@Valid CreateAccountCommand command) {
 
-        val client = clientRepository.findById(UUID.fromString(command.getClientUUID()))
-                .orElseThrow(() -> new ResourceNotFoundException(Reason.CLIENT_NOT_FOUND, command.getClientUUID()));
+        val client = clientRepository.findById(command.getClientUUID())
+                .orElseThrow(() -> new ResourceNotFoundException(Reason.CLIENT_NOT_FOUND, command.getClientUUID().toString()));
         val account = new AccountEntity();
         account.setClient(client);
         account.setCurrency(command.getCurrency());
@@ -43,10 +45,17 @@ public class AccountService {
         return accountRepository.save(account).getId();
     }
 
-    public AccountData getAccount(String accountUUID) {
-        return accountRepository.findById(UUID.fromString(accountUUID))
+    public AccountData getAccount(UUID accountId) {
+        return accountRepository.findById(accountId)
                 .map(accountMapper::map)
-                .orElseThrow(() -> new ResourceNotFoundException(Reason.ACCOUNT_NOT_FOUND, accountUUID));
+                .orElseThrow(() -> new ResourceNotFoundException(Reason.ACCOUNT_NOT_FOUND, accountId.toString()));
+    }
+
+    public List<AccountData> getClientAccounts(UUID clientUUID) {
+        return accountRepository.findAllByClientIdOrderByCreatedDateDesc(clientUUID)
+                .stream()
+                .map(accountMapper::map)
+                .collect(Collectors.toList());
     }
 
 }

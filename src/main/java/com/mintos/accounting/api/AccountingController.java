@@ -1,9 +1,6 @@
 package com.mintos.accounting.api;
 
-import com.mintos.accounting.api.model.CreateAccountRequest;
-import com.mintos.accounting.api.model.CreateAccountResponse;
-import com.mintos.accounting.api.model.CreateClientRequest;
-import com.mintos.accounting.api.model.CreateClientResponse;
+import com.mintos.accounting.api.model.*;
 import com.mintos.accounting.service.AccountingService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -12,6 +9,8 @@ import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping(path = "${accounting.api.v1}/clients")
@@ -33,7 +32,14 @@ public class AccountingController {
     public ResponseEntity<CreateAccountResponse> createAccount(
             @PathVariable("client_id") String clientUUID,
             @Valid @RequestBody CreateAccountRequest request) {
-        val response = accountingService.createAccount(clientUUID, request);
+        val response = accountingService.createAccount(UUID.fromString(clientUUID), request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{client_id}/accounts")
+    public ResponseEntity<AccountsDataResponse> getClientAccounts(
+            @PathVariable("client_id") String clientUUID) {
+        val response = accountingService.getClientAccounts(UUID.fromString(clientUUID));
+        return new ResponseEntity<>(new AccountsDataResponse(response), HttpStatus.OK);
     }
 }
