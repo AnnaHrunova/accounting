@@ -1,0 +1,431 @@
+{
+	"info": {
+		"_postman_id": "d7404867-a5e3-4d7f-97d6-90e6e91c1e39",
+		"name": "Accounting",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23952464"
+	},
+	"item": [
+		{
+			"name": "Create Client 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"clientId\", jsonData.clientUUID);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"firstName\": \"John\",\n    \"lastName\":\"Doe\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/accounting/v1/clients",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"accounting",
+						"v1",
+						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Client 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"clientId\", jsonData.clientUUID);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"firstName\": \"John\",\n    \"lastName\":\"Doe\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/accounting/v1/clients",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"accounting",
+						"v1",
+						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Account 1 For Client 1",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"currency\": \"EUR\",\n  \"balance\": 100\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/accounting/v1/clients/{{clientUUID}}/accounts",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"accounting",
+						"v1",
+						"clients",
+						"{{clientUUID}}",
+						"accounts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Account 1 For Client 2",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"currency\": \"EUR\",\n  \"balance\": 100\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/accounting/v1/clients/{{clientUUID}}/accounts",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"accounting",
+						"v1",
+						"clients",
+						"{{clientUUID}}",
+						"accounts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Account 2 For Client 2",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"currency\": \"EUR\",\n  \"balance\": 100\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/accounting/v1/clients/{{clientUUID}}/accounts",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"accounting",
+						"v1",
+						"clients",
+						"{{clientUUID}}",
+						"accounts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create EUR-EUR transaction",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"requestId\": \"Some Very Unique Id\",\n  \"fromAccountUUID\": \"{{accountId1}}\",\n  \"toAccountUUID\": \"{{accountId2}}\",\n  \"amount\": 10,\n  \"currency\": \"EUR\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/accounting/v1/transactions",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"accounting",
+						"v1",
+						"transactions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create EUR-USD transaction",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"requestId\": \"Some Very Unique Id\",\n  \"fromAccountUUID\": \"{{accountId1}}\",\n  \"toAccountUUID\": \"{{accountId2}}\",\n  \"amount\": 10,\n  \"currency\": \"EUR\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/accounting/v1/transactions",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"accounting",
+						"v1",
+						"transactions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Client 1 Account 1 Transactions",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"requestId\": \"Some Very Unique Id\",\n  \"fromAccountUUID\": \"{{accountId1}}\",\n  \"toAccountUUID\": \"{{accountId2}}\",\n  \"amount\": 10,\n  \"currency\": \"EUR\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/accounting/v1/accounts/{{accountId1}}/transactions?offset=0&limit=5",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"accounting",
+						"v1",
+						"accounts",
+						"{{accountId1}}",
+						"transactions"
+					],
+					"query": [
+						{
+							"key": "offset",
+							"value": "0"
+						},
+						{
+							"key": "limit",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Client 2 Account 1 Transactions",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"requestId\": \"Some Very Unique Id\",\n  \"fromAccountUUID\": \"{{accountId1}}\",\n  \"toAccountUUID\": \"{{accountId2}}\",\n  \"amount\": 10,\n  \"currency\": \"EUR\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/accounting/v1/accounts/{{accountId2}}/transactions?offset=0&limit=5",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"accounting",
+						"v1",
+						"accounts",
+						"{{accountId2}}",
+						"transactions"
+					],
+					"query": [
+						{
+							"key": "offset",
+							"value": "0"
+						},
+						{
+							"key": "limit",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Client 2 Account 2 Transactions",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"requestId\": \"Some Very Unique Id\",\n  \"fromAccountUUID\": \"{{accountId1}}\",\n  \"toAccountUUID\": \"{{accountId2}}\",\n  \"amount\": 10,\n  \"currency\": \"EUR\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/accounting/v1/accounts/{{accountId2}}/transactions?offset=0&limit=5",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"accounting",
+						"v1",
+						"accounts",
+						"{{accountId2}}",
+						"transactions"
+					],
+					"query": [
+						{
+							"key": "offset",
+							"value": "0"
+						},
+						{
+							"key": "limit",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Client 1 Accounts Data",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"requestId\": \"Some Very Unique Id\",\n  \"fromAccountUUID\": \"{{accountId1}}\",\n  \"toAccountUUID\": \"{{accountId2}}\",\n  \"amount\": 10,\n  \"currency\": \"EUR\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/accounting/v1/clients/{{clientId1}}/accounts",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"accounting",
+						"v1",
+						"clients",
+						"{{clientId1}}",
+						"accounts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Client 2 Accounts Data",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"requestId\": \"Some Very Unique Id\",\n  \"fromAccountUUID\": \"{{accountId1}}\",\n  \"toAccountUUID\": \"{{accountId2}}\",\n  \"amount\": 10,\n  \"currency\": \"EUR\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/accounting/v1/clients/{{clientId2}}/accounts",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"accounting",
+						"v1",
+						"clients",
+						"{{clientId2}}",
+						"accounts"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

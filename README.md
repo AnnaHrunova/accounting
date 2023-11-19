@@ -34,3 +34,8 @@
 
 <h4>Swagger</h4>
 http://localhost:8080/swagger-ui/index.html
+
+<h4>Postman Collection</h4>
+Postman collection and Local environment can be found in `/postman` folder. <br/>
+It covers basic scenarios for client creation, account creation, transaction handling and view. <br/>
+
