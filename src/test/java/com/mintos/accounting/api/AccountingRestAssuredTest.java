@@ -6,6 +6,7 @@ import com.mintos.accounting.api.model.CreateClientResponse;
 import com.mintos.accounting.config.BaseRestAssuredTest;
 import com.mintos.accounting.domain.account.AccountRepository;
 import com.mintos.accounting.domain.client.ClientRepository;
+import com.mintos.accounting.service.account.AccountService;
 import io.restassured.http.ContentType;
 import lombok.val;
 import org.junit.jupiter.api.Test;
@@ -27,6 +28,9 @@ class AccountingRestAssuredTest extends BaseRestAssuredTest {
 
     @Autowired
     private AccountRepository accountRepository;
+
+    @Autowired
+    private AccountService accountService;
 
     @Test
     public void shouldCreateClient() {
@@ -71,7 +75,7 @@ class AccountingRestAssuredTest extends BaseRestAssuredTest {
                         .body()
                         .as(CreateAccountResponse.class);
         val newAccountUUID = response.getAccountUUID();
-        val savedAccount = accountRepository.findById(newAccountUUID);
+        val savedAccount = accountRepository.findFirstById(newAccountUUID);
         assertThat(savedAccount).isPresent();
         assertThat(savedAccount.get().getBalance()).isEqualTo(toMoney(newAccountRequest.getBalance()));
         assertThat(savedAccount.get().getCurrency()).isEqualTo(newAccountRequest.getCurrency());

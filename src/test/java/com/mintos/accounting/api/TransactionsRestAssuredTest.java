@@ -144,7 +144,7 @@ class TransactionsRestAssuredTest extends BaseRestAssuredTest {
     }
 
     @Test
-    void test() throws InterruptedException {
+    void shouldTestParallelExecution() throws InterruptedException {
         val client1 = clientRepository.save(prepareClient());
         val client2 = clientRepository.save(prepareClient());
 
@@ -154,7 +154,7 @@ class TransactionsRestAssuredTest extends BaseRestAssuredTest {
 
         Callable<Object> createTrx = () -> processTransaction(transactionRequest, HttpStatus.CREATED);
 
-        var executorService = Executors.newFixedThreadPool(2);
+        var executorService = Executors.newFixedThreadPool(6);
 
         executorService.invokeAll(List.of(
                 createTrx, createTrx, createTrx,
@@ -163,9 +163,11 @@ class TransactionsRestAssuredTest extends BaseRestAssuredTest {
 
         executorService.shutdown();
 
-//        val res = accountingService.getAccount(accountFromUUID);
-        // Verify that the account's balance was correctly updated
-        assertThat(1).isEqualTo(1);
+        val fromBalance = accountRepository.findFirstById(accountFromUUID).get().getBalance();
+        assertThat(fromBalance).isEqualTo(toMoney(new BigDecimal("70")));
+
+        val toBalance = accountRepository.findFirstById(accountToUUID).get().getBalance();
+        assertThat(toBalance).isEqualTo(toMoney(new BigDecimal("35")));
     }
 
     private static CreateTransactionResponse processTransaction(CreateTransactionRequest transactionRequest, HttpStatus expectedHttpStatus) {

@@ -13,6 +13,7 @@ import com.mintos.accounting.config.BaseRestAssuredTest;
 import com.mintos.accounting.domain.account.AccountRepository;
 import com.mintos.accounting.domain.client.ClientEntity;
 import com.mintos.accounting.domain.client.ClientRepository;
+import com.mintos.accounting.service.account.AccountService;
 import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
@@ -38,6 +39,9 @@ class TransactionsHistoryRestAssuredTest extends BaseRestAssuredTest {
 
     @Autowired
     private AccountRepository accountRepository;
+
+    @Autowired
+    private AccountService accountingService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -110,7 +114,7 @@ class TransactionsHistoryRestAssuredTest extends BaseRestAssuredTest {
                         .body()
                         .as(CreateAccountResponse.class);
         val newAccountUUID = response.getAccountUUID();
-        val savedAccount = accountRepository.findById(newAccountUUID);
+        val savedAccount = accountRepository.findFirstById(newAccountUUID);
         assertThat(savedAccount).isPresent();
         assertThat(savedAccount.get().getBalance()).isEqualTo(toMoney(newAccountRequest.getBalance()));
         assertThat(savedAccount.get().getCurrency()).isEqualTo(newAccountRequest.getCurrency());

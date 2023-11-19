@@ -94,8 +94,8 @@ public class TransactionService {
         transaction.setRequestId(command.getRequestId());
 
         val savedTransaction = transactionRepository.save(transaction);
-        //saveOutgoingView(savedTransaction, accountFrom, command);
-        //saveIncomingView(savedTransaction, accountTo);
+        saveOutgoingView(savedTransaction, accountFrom, command);
+        saveIncomingView(savedTransaction, accountTo);
 
         return mapper.map(savedTransaction);
     }

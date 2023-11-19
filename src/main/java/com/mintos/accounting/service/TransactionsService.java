@@ -39,15 +39,15 @@ public class TransactionsService {
 
     @Transactional
     public CreateTransactionResponse createTransaction(@Valid CreateTransactionRequest request) {
-//        val fromAccount = accountService.getAccount(request.getFromAccountUUID());
-//        val toAccount = accountService.getAccount(request.getToAccountUUID());
+        val fromAccount = accountService.getAccount(request.getFromAccountUUID());
+        val toAccount = accountService.getAccount(request.getToAccountUUID());
         val command = commandMapper.map(request);
         val targetCurrency = request.getCurrency();
-//        val originCurrency = fromAccount.getCurrency();
-//        if (originCurrency != targetCurrency) {
-//            command.setConvertedAmount(exchangeService.convert(command.getAmount(), targetCurrency, originCurrency));
-//        }
-        val savedTransaction = performTransaction(command, null, null);
+        val originCurrency = fromAccount.getCurrency();
+        if (originCurrency != targetCurrency) {
+            command.setConvertedAmount(exchangeService.convert(command.getAmount(), targetCurrency, originCurrency));
+        }
+        val savedTransaction = performTransaction(command, fromAccount, toAccount);
         return CreateTransactionResponse.builder()
                 .transactionUUID(savedTransaction.getId())
                 .dateTime(savedTransaction.getCreatedDate())
@@ -67,13 +67,12 @@ public class TransactionsService {
     public TransactionData performTransaction(CreateTransactionCommand command, AccountData fromAccount, AccountData toAccount) {
         TransactionData savedTransaction;
         try {
-//            validateTransaction(fromAccount, toAccount, command, exchangeService.getSupportedCurrencies());
+            validateTransaction(fromAccount, toAccount, command, exchangeService.getSupportedCurrencies());
             command.setStatus(TransactionStatus.SUCCESS);
             savedTransaction = transactionService.performTransaction(command);
         } catch (TransactionValidationException ex) {
             command.setStatus(TransactionStatus.ERROR);
-            savedTransaction = null;
-//            savedTransaction = transactionService.handleFailedTransaction(command);
+            savedTransaction = transactionService.handleFailedTransaction(command);
         }
         return savedTransaction;
     }
