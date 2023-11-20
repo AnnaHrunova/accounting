@@ -21,6 +21,7 @@
 
 * Build: `./gradlew clean build`
 * Run:
+  Replace `exchange.api-key` with real api key value
   Local Run: `.run/LocalAccountingApplication.run.xml` run configuration is available. <br/>
   Local Run with mocked currency exchange API: `.run/LocalMockAccountingApplication.run.xml` run configuration is
   available. <br/>
