@@ -3,7 +3,7 @@ accounting:
     v1: accounting/v1
 exchange:
   base-url: http://api.exchangerate.host/%s?access_key=%s
-  api-key: a74a9626514e8e7b5fb7b4e42e7e338c
+  api-key: <api-key>
   convert:
     path: /convert
     query: "&from=%s&to=%s&amount=%s"
