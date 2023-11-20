@@ -20,8 +20,8 @@
 <h4>Commands</h4>
 
 * Build: `./gradlew clean build`
-* Run:
-  Replace `exchange.api-key` with real api key value
+* Run: <br/>
+  Replace `exchange.api-key` with real api key value <br/>
   Local Run: `.run/LocalAccountingApplication.run.xml` run configuration is available. <br/>
   Local Run with mocked currency exchange API: `.run/LocalMockAccountingApplication.run.xml` run configuration is
   available. <br/>
