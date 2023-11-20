@@ -16,8 +16,10 @@ import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static java.util.Collections.emptySet;
+import static java.util.Optional.ofNullable;
 
 @Component
 @AllArgsConstructor
@@ -40,22 +42,22 @@ public class DefaultCurrencyConverter implements CurrencyConverter {
             return response != null ? response.getResult() : null;
         } catch (ExternalApiCallException ex) {
             log.error("Error while currency conversion by external API.");
-            return null;
+            return fallback(amount, currencyFrom, currencyTo);
         }
     }
 
     @Cacheable("supportedCurrencies")
     @Override
-    public Set<String> getSupportedCurrencies() {
+    public Set<Currency> getSupportedCurrencies() {
         val currencies = exchangeProperties.getCurrency();
         val url = String.format(exchangeProperties.getBaseUrl(), currencies.getPath(), exchangeProperties.getApiKey());
         try {
             val response = restTemplate.getForObject(url, ExchangeResponse.class);
-            return response != null ? response.getCurrencies().keySet() : emptySet();
+            return response != null ? response.getCurrencies().keySet().stream().map(Currency::valueOf).collect(Collectors.toSet()) : emptySet();
         } catch (ExternalApiCallException e) {
             log.error("Error while fetching supported currencies from external API.");
             log.warn("Returning fallback currencies list.");
-            return currencies.getFallback();
+            return fallback();
         }
     }
 
@@ -63,5 +65,16 @@ public class DefaultCurrencyConverter implements CurrencyConverter {
     @Scheduled(fixedRateString = "600000")
     public void emptySupportedCurrenciesCache() {
         log.info("Empty supportedCurrencies cache");
+    }
+
+    private BigDecimal fallback(BigDecimal amount, Currency currencyFrom, Currency currencyTo) {
+        return ofNullable(exchangeProperties.getConvert().getFallbackRates().get(currencyFrom))
+                .map(c -> c.get(currencyTo))
+                .map(r -> r.multiply(amount))
+                .orElse(null);
+    }
+
+    private Set<Currency> fallback() {
+        return exchangeProperties.getConvert().getFallbackRates().keySet();
     }
 }

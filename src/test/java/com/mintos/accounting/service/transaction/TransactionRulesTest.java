@@ -26,7 +26,7 @@ class TransactionRulesTest {
     @ParameterizedTest
     @MethodSource("invalidTransactionInput")
     void testTransactionValidationRules(AccountData from, AccountData to, CreateTransactionCommand command, Reason expectedReason) {
-        val supportedCurrencies = Set.of("EUR", "GBP");
+        val supportedCurrencies = Set.of(Currency.EUR, Currency.GBP);
 
         val expectedMessage = String.format(expectedReason.getMessage(), TRANSACTION_REQUEST_ID);
         val exception = assertThrows(TransactionValidationException.class, () -> TransactionRules.validateTransaction(from, to, command, supportedCurrencies));

@@ -24,7 +24,7 @@ public class MockCurrencyConverter implements CurrencyConverter {
     }
 
     @Override
-    public Set<String> getSupportedCurrencies() {
-        return converterProperties.getCurrency().getFallback();
+    public Set<Currency> getSupportedCurrencies() {
+        return converterProperties.getMockCurrencies();
     }
 }

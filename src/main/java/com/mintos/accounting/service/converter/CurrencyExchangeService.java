@@ -20,7 +20,7 @@ public class CurrencyExchangeService {
         return currencyConverter.convert(amount, currencyFrom, currencyTo);
     }
 
-    public Set<String> getSupportedCurrencies() {
+    public Set<Currency> getSupportedCurrencies() {
         return currencyConverter.getSupportedCurrencies();
     }
 }

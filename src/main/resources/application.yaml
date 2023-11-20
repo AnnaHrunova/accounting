@@ -7,10 +7,20 @@ exchange:
   convert:
     path: /convert
     query: "&from=%s&to=%s&amount=%s"
+    fallback-rates:
+      EUR:
+        USD: 1.0923192
+        GBP: 0.8800000
+      USD:
+        EUR: 0.9200000
+        GBP: 0.8000000
+      GBP:
+        EUR: 1.1400000
+        USD: 1.2500000
   currency:
     path: /list
-    fallback: EUR,GBP,USD
   mock-rate: 0.05
+  mock-currencies: EUR,USD,GBP
 spring:
   datasource:
     url: ${DB_URL}

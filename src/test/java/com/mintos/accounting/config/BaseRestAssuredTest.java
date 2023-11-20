@@ -8,13 +8,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Objects;
 
 @SpringBootTest(classes = IntegrationApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("mock")
 public class BaseRestAssuredTest extends BaseIntegrationTest {
     @LocalServerPort
     protected Integer localPort;

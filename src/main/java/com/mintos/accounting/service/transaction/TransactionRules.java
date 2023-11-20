@@ -21,14 +21,14 @@ public class TransactionRules {
     public static void validateTransaction(AccountData from,
                                            AccountData to,
                                            CreateTransactionCommand command,
-                                           Set<String> supportedCurrencies) {
+                                           Set<Currency> supportedCurrencies) {
 
         var amount = command.getAmount();
         if (command.getConvertedAmount() != null) {
             amount = command.getConvertedAmount();
         }
 
-        if (!supportedCurrencies.containsAll(List.of(from.getCurrency().name(), to.getCurrency().name()))) {
+        if (!supportedCurrencies.containsAll(List.of(from.getCurrency(), to.getCurrency()))) {
             throw new TransactionValidationException(Reason.TRANSACTION_UNSUPPORTED_CURRENCY, command.getRequestId());
         }
         if (SAME_ACCOUNT.test(from, to)) {
