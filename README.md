@@ -33,7 +33,7 @@
 * Test coverage location: `build/reports/jacoco/test/html/index.html` <br/><br/>
 
 <h4>Swagger</h4>
-http://localhost:8080/swagger-ui/index.html
+http://localhost:8080/swagger-ui/index.html <br/>
 
 <h4>Postman Collection</h4>
 Postman collection and Local environment can be found in `/postman` folder. <br/>
