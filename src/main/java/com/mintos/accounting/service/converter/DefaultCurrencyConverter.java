@@ -48,6 +48,7 @@ public class DefaultCurrencyConverter implements CurrencyConverter {
     }
 
     @Cacheable("supportedCurrencies")
+    //The idea behind cache is that supported currencies will not change every second and this call may be cached
     @Override
     public Set<Currency> getSupportedCurrencies() {
         val currencies = exchangeProperties.getCurrency();
