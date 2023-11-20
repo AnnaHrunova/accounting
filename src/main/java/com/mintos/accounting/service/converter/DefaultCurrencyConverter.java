@@ -18,6 +18,7 @@ import java.math.BigDecimal;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.mintos.accounting.common.FormattingUtils.toMoney;
 import static java.util.Collections.emptySet;
 import static java.util.Optional.ofNullable;
 
@@ -70,7 +71,7 @@ public class DefaultCurrencyConverter implements CurrencyConverter {
     private BigDecimal fallback(BigDecimal amount, Currency currencyFrom, Currency currencyTo) {
         return ofNullable(exchangeProperties.getConvert().getFallbackRates().get(currencyFrom))
                 .map(c -> c.get(currencyTo))
-                .map(r -> r.multiply(amount))
+                .map(r -> toMoney(r.multiply(amount)))
                 .orElse(null);
     }
 

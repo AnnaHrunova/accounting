@@ -1,9 +1,9 @@
 package com.mintos.accounting;
 
-import com.mintos.accounting.config.BaseIntegrationTest;
+import com.mintos.accounting.config.BaseMockIntegrationTest;
 import org.junit.jupiter.api.Test;
 
-class AccountingApplicationTests extends BaseIntegrationTest {
+class AccountingApplicationTests extends BaseMockIntegrationTest {
 
     @Test
     void contextLoads() {

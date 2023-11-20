@@ -13,7 +13,7 @@ import java.util.Objects;
 
 @SpringBootTest(classes = IntegrationApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class BaseRestAssuredTest extends BaseIntegrationTest {
+public class BaseRestAssuredTest extends BaseMockIntegrationTest {
     @LocalServerPort
     protected Integer localPort;
 

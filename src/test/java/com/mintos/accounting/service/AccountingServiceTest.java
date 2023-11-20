@@ -4,7 +4,7 @@ import com.mintos.accounting.api.model.account.AccountDataResponse;
 import com.mintos.accounting.api.model.account.CreateAccountRequest;
 import com.mintos.accounting.api.model.account.CreateClientRequest;
 import com.mintos.accounting.common.Currency;
-import com.mintos.accounting.config.BaseIntegrationTest;
+import com.mintos.accounting.config.BaseMockIntegrationTest;
 import com.mintos.accounting.exceptions.AccountValidationException;
 import com.mintos.accounting.exceptions.ResourceNotFoundException;
 import jakarta.validation.ConstraintViolationException;
@@ -22,7 +22,7 @@ import static com.mintos.accounting.common.FormattingUtils.toMoney;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class AccountingServiceTest extends BaseIntegrationTest {
+class AccountingServiceTest extends BaseMockIntegrationTest {
 
     @Autowired
     private AccountingService target;

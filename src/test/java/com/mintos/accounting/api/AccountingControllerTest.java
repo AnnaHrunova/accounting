@@ -1,6 +1,6 @@
 package com.mintos.accounting.api;
 
-import com.mintos.accounting.config.BaseIntegrationTest;
+import com.mintos.accounting.config.BaseMockIntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -14,7 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Deprecated(since = "Replaced by rest-assured")
-class AccountingControllerTest extends BaseIntegrationTest {
+class AccountingControllerTest extends BaseMockIntegrationTest {
 
     @Autowired
     MockMvc mockMvc;

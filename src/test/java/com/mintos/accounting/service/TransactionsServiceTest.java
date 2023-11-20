@@ -4,7 +4,7 @@ import com.mintos.accounting.api.model.transaction.CreateTransactionRequest;
 import com.mintos.accounting.common.Currency;
 import com.mintos.accounting.common.TransactionStatus;
 import com.mintos.accounting.common.TransactionType;
-import com.mintos.accounting.config.BaseIntegrationTest;
+import com.mintos.accounting.config.BaseMockIntegrationTest;
 import com.mintos.accounting.domain.account.AccountRepository;
 import com.mintos.accounting.domain.client.ClientRepository;
 import com.mintos.accounting.domain.transaction.TransactionRepository;
@@ -21,7 +21,7 @@ import static com.mintos.accounting.TestFixtures.prepareClient;
 import static com.mintos.accounting.common.FormattingUtils.toMoney;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-class TransactionsServiceTest extends BaseIntegrationTest {
+class TransactionsServiceTest extends BaseMockIntegrationTest {
 
     @Autowired
     private ClientRepository clientRepository;

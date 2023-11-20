@@ -66,6 +66,7 @@ jacocoTestReport {
                     "**/error/*",
                     "**/common/*",
                     "**/domain/*",
+                    "**/config/*",
                     "**/*Command.*",
                     "**/*Data.*",
                     "**/*Properties.*",
