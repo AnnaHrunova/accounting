@@ -1,7 +1,7 @@
 package com.mintos.accounting.service.transaction;
 
-import com.mintos.accounting.api.model.CreateTransactionRequest;
-import com.mintos.accounting.api.model.TransactionViewResponse;
+import com.mintos.accounting.api.model.transaction.CreateTransactionRequest;
+import com.mintos.accounting.api.model.transaction.TransactionViewResponse;
 import com.mintos.accounting.domain.transaction.TransactionEntity;
 import com.mintos.accounting.domain.view.TransactionViewEntity;
 import org.mapstruct.Mapper;

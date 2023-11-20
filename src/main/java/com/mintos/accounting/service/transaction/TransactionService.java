@@ -1,7 +1,7 @@
 package com.mintos.accounting.service.transaction;
 
 import com.mintos.accounting.api.model.FilteredPageRequest;
-import com.mintos.accounting.api.model.TransactionViewResponse;
+import com.mintos.accounting.api.model.transaction.TransactionViewResponse;
 import com.mintos.accounting.common.TransactionType;
 import com.mintos.accounting.domain.account.AccountEntity;
 import com.mintos.accounting.domain.account.AccountRepository;

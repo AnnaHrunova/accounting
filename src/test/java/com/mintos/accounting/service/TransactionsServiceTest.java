@@ -1,6 +1,6 @@
 package com.mintos.accounting.service;
 
-import com.mintos.accounting.api.model.CreateTransactionRequest;
+import com.mintos.accounting.api.model.transaction.CreateTransactionRequest;
 import com.mintos.accounting.common.Currency;
 import com.mintos.accounting.common.TransactionStatus;
 import com.mintos.accounting.common.TransactionType;

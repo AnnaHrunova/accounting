@@ -1,8 +1,8 @@
 package com.mintos.accounting.api;
 
 import com.mintos.accounting.api.error.RestValidationResponse;
-import com.mintos.accounting.api.model.CreateAccountResponse;
-import com.mintos.accounting.api.model.CreateClientResponse;
+import com.mintos.accounting.api.model.account.CreateAccountResponse;
+import com.mintos.accounting.api.model.account.CreateClientResponse;
 import com.mintos.accounting.config.BaseRestAssuredTest;
 import com.mintos.accounting.domain.account.AccountRepository;
 import com.mintos.accounting.domain.client.ClientRepository;

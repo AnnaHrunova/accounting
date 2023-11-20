@@ -1,8 +1,8 @@
 package com.mintos.accounting;
 
-import com.mintos.accounting.api.model.CreateAccountRequest;
-import com.mintos.accounting.api.model.CreateClientRequest;
-import com.mintos.accounting.api.model.CreateTransactionRequest;
+import com.mintos.accounting.api.model.account.CreateAccountRequest;
+import com.mintos.accounting.api.model.account.CreateClientRequest;
+import com.mintos.accounting.api.model.transaction.CreateTransactionRequest;
 import com.mintos.accounting.common.Currency;
 import com.mintos.accounting.domain.account.AccountEntity;
 import com.mintos.accounting.domain.client.ClientEntity;

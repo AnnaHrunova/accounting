@@ -1,6 +1,6 @@
 package com.mintos.accounting.service;
 
-import com.mintos.accounting.api.model.*;
+import com.mintos.accounting.api.model.account.*;
 import com.mintos.accounting.service.account.AccountData;
 import com.mintos.accounting.service.account.AccountService;
 import com.mintos.accounting.service.account.CreateAccountCommand;

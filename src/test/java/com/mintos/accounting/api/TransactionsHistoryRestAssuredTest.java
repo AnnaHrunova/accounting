@@ -2,10 +2,10 @@ package com.mintos.accounting.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mintos.accounting.api.model.CreateAccountResponse;
-import com.mintos.accounting.api.model.CreateTransactionRequest;
-import com.mintos.accounting.api.model.CreateTransactionResponse;
-import com.mintos.accounting.api.model.TransactionViewResponse;
+import com.mintos.accounting.api.model.account.CreateAccountResponse;
+import com.mintos.accounting.api.model.transaction.CreateTransactionRequest;
+import com.mintos.accounting.api.model.transaction.CreateTransactionResponse;
+import com.mintos.accounting.api.model.transaction.TransactionViewResponse;
 import com.mintos.accounting.common.Currency;
 import com.mintos.accounting.common.TransactionStatus;
 import com.mintos.accounting.common.TransactionType;

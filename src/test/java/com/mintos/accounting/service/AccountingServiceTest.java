@@ -1,8 +1,8 @@
 package com.mintos.accounting.service;
 
-import com.mintos.accounting.api.model.AccountDataResponse;
-import com.mintos.accounting.api.model.CreateAccountRequest;
-import com.mintos.accounting.api.model.CreateClientRequest;
+import com.mintos.accounting.api.model.account.AccountDataResponse;
+import com.mintos.accounting.api.model.account.CreateAccountRequest;
+import com.mintos.accounting.api.model.account.CreateClientRequest;
 import com.mintos.accounting.common.Currency;
 import com.mintos.accounting.config.BaseIntegrationTest;
 import com.mintos.accounting.exceptions.AccountValidationException;

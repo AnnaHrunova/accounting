@@ -1,10 +1,11 @@
 package com.mintos.accounting.api;
 
 import com.mintos.accounting.api.model.FilteredPageRequest;
-import com.mintos.accounting.api.model.TransactionViewResponse;
+import com.mintos.accounting.api.model.transaction.TransactionViewResponse;
 import com.mintos.accounting.service.TransactionsService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -14,11 +15,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(path = "${accounting.api.v1}/accounts")
 @AllArgsConstructor
 @CrossOrigin
-@Slf4j
+@Tag(name = "Transaction History Controller")
 public class TransactionHistoryController {
 
     private final TransactionsService transactionsService;
 
+    @Operation(summary = "Retrieve account transaction history")
     @GetMapping("/{account_id}/transactions")
     public ResponseEntity<Page<TransactionViewResponse>> getAccountTransactions(
             @PathVariable("account_id") String accountUUID,
