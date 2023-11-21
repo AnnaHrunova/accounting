@@ -3,6 +3,7 @@ package com.mintos.accounting.api.model.transaction;
 
 import com.mintos.accounting.common.Currency;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -42,6 +43,7 @@ public class CreateTransactionRequest {
             description = "Amount to be sent",
             example = "100.00")
     @NotNull
+    @DecimalMin(value = "0.01", inclusive = false)
     private BigDecimal amount;
 
     @Schema(

@@ -45,6 +45,12 @@ public class ExceptionHandler {
         return status(HttpStatus.BAD_REQUEST).body(result);
     }
 
+    @org.springframework.web.bind.annotation.ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
+    public ResponseEntity<String> handleRestValidationException(RuntimeException ex) {
+        return status(HttpStatus.SERVICE_UNAVAILABLE).body(ex.getMessage());
+    }
+
     private RestValidationResponse buildValidationResponse(List<FieldError> fieldValidationErrors) {
         var errorPayload =
                 RestValidationResponse.builder()

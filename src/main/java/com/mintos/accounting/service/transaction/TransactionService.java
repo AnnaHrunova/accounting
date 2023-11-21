@@ -42,11 +42,12 @@ public class TransactionService {
 
         val accountFromNewBalance = calculateOutgoingBalance(command, accountFrom.getBalance());
         updateAccount(accountFrom, accountFromNewBalance);
-        log.info("Account from: {}, {}", accountFrom.getEntityVersion(), accountFrom.getBalance());
+        //For testing concurrency
+        log.info("AccountFrom id={}, balance changed to: {}, entity version: {}, thread: {}", accountFrom.getId(), accountFrom.getBalance(), accountFrom.getEntityVersion(), Thread.currentThread().getName());
 
         val accountToNewBalance = accountTo.getBalance().add(command.getAmount());
         updateAccount(accountTo, accountToNewBalance);
-        log.info("Account to: {}, {}", accountTo.getEntityVersion(), accountTo.getBalance());
+        log.info("AccountTo id={}, balance changed to: {}, entity version: {}, thread: {}", accountTo.getId(), accountTo.getBalance(), accountTo.getEntityVersion(), Thread.currentThread().getName());
 
         return saveTransaction(command, accountFrom, accountTo);
     }
@@ -54,7 +55,7 @@ public class TransactionService {
     public TransactionData handleFailedTransaction(@Valid CreateTransactionCommand command) {
         val accountFrom = getAccount(command.getFromAccountUUID());
         val accountTo = getAccount(command.getToAccountUUID());
-
+        log.info("Saving failed transaction data for transactionRequestId={}", command.getRequestId());
         return saveTransaction(command, accountFrom, accountTo);
     }
 
@@ -67,7 +68,7 @@ public class TransactionService {
     }
 
     private AccountEntity getAccount(String accountUUID) {
-        return accountRepository.findById(UUID.fromString(accountUUID))
+        return accountRepository.findFirstById(UUID.fromString(accountUUID))
                 .orElseThrow(() -> new ResourceNotFoundException(Reason.ACCOUNT_NOT_FOUND, accountUUID));
     }
 
@@ -97,6 +98,7 @@ public class TransactionService {
         saveOutgoingView(savedTransaction, accountFrom, command);
         saveIncomingView(savedTransaction, accountTo);
 
+        log.info("Saving success transaction data for transactionRequestId={}", command.getRequestId());
         return mapper.map(savedTransaction);
     }
 

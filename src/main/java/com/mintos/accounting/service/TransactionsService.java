@@ -48,6 +48,7 @@ public class TransactionsService {
             command.setConvertedAmount(exchangeService.convert(command.getAmount(), targetCurrency, originCurrency));
         }
         val savedTransaction = performTransaction(command, fromAccount, toAccount);
+        log.info("Transaction requestId={} handled gracefully", command.getRequestId());
         return CreateTransactionResponse.builder()
                 .transactionUUID(savedTransaction.getId())
                 .dateTime(savedTransaction.getCreatedDate())
@@ -70,7 +71,9 @@ public class TransactionsService {
             validateTransaction(fromAccount, toAccount, command, exchangeService.getSupportedCurrencies());
             command.setStatus(TransactionStatus.SUCCESS);
             savedTransaction = transactionService.performTransaction(command);
+            log.info("Transaction requestId={} handled successfully", command.getRequestId());
         } catch (TransactionValidationException ex) {
+            log.error("Transaction requestId={} failed with exception:", command.getRequestId(), ex);
             command.setStatus(TransactionStatus.ERROR);
             savedTransaction = transactionService.handleFailedTransaction(command);
         }

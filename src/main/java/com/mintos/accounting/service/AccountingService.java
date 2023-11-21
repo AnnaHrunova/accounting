@@ -8,6 +8,7 @@ import com.mintos.accounting.service.account.CreateClientCommand;
 import com.mintos.accounting.service.converter.CurrencyExchangeService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
@@ -21,6 +22,7 @@ import static com.mintos.accounting.service.account.AccountRules.validateAccount
 @Component
 @AllArgsConstructor
 @Validated
+@Slf4j
 public class AccountingService {
 
     private final AccountService accountService;
@@ -33,6 +35,7 @@ public class AccountingService {
                 .build();
 
         val clientUUID = accountService.createClient(command);
+        log.info("Client id={} created successfully", clientUUID);
         return CreateClientResponse.builder()
                 .clientUUID(clientUUID).build();
     }
@@ -46,6 +49,7 @@ public class AccountingService {
 
         validateAccount(command, exchangeService.getSupportedCurrencies());
         val accountUUID = accountService.createAccount(command);
+        log.info("Account id={} created successfully", accountUUID);
         return CreateAccountResponse.builder()
                 .accountUUID(accountUUID).build();
     }
